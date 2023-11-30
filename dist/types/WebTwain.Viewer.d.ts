@@ -1,8 +1,9 @@
 import { WebTwainAcquire } from "./WebTwain.Acquire";
-import { Resolution } from "./Addon.Camera";
+import { DynamsoftEnumsDWT } from "./Dynamsoft.Enum";
 
 export interface WebTwainViewer extends WebTwainAcquire {
     /**
+	 * @deprecated since version 16.2. This function will be removed in future versions. Use `Viewer.bind` and `Viewer.show` instead.
      * Create a Dynamsoft Viewer instance and bind it to the WebTwain instance.
      * @param elementId Specify an HTML element to create the viewer.
      */
@@ -10,62 +11,80 @@ export interface WebTwainViewer extends WebTwainAcquire {
         elementId: string
     ): boolean;
     /**
+	 * @deprecated since version 16.2. This function will be removed in future versions. Use `Viewer.unbind` instead.
      * Unbind and destroy the viewer.
      */
     UnbindViewer(): boolean;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.background` instead.
      * Return or set the background colour of the viewer.
      */
     BackgroundColor: number;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use function `Viewer.selectedPageBorder` instead.
      * Return or set the border colour for selected image(s).
      */
     SelectionImageBorderColor: number;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use function `Viewer.fitWindow` instead.
      * Return or set how the image is fit in the viewer.
      */
     FitWindowType: number;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use function `Viewer.fitWindow` instead.
      * Return or set the border colour for selected image(s).
      */
     IfFitWindow: boolean;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.height` instead.
      * Return or set the height of the viewer.
      */
     Height: number | string;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.width` instead.
      * Return or set the width of the viewer.
      */
     Width: number | string;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `ViewerEvent.imageX` instead.
      * Return the horizontal coordinate of the mouse.
      */
     readonly MouseX: number;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `ViewerEvent.imageY` instead.
      * Return the vertical coordinate of the mouse.
      */
     readonly MouseY: number;
     /**
+	 * @deprecated since version 16.2. This function will be removed in future versions. Use `Viewer.cursor` instead.
      * Return or set the shape of the cursor.
      */
     MouseShape: boolean;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.ifAutoScroll` instead.
      * Return or set whether the thumbnails view scrolls when new images come in.
      */
     IfAutoScroll: boolean;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use function `Viewer.updatePageNumberStyle` instead.
      * Return or set whether to show the page numbers.
      */
     ShowPageNumber: boolean;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.pageMargin` instead.
      * Return or set the margin between images (in pixels).
      */
     ImageMargin: number;
     /**
+	 * @deprecated since version 16.2. This property will be removed in future versions. Use `Viewer.zoom` instead.
      * Return or set the zoom factor.
      */
     Zoom: number;
     Viewer: DynamsoftViewer;
+     /**
+     * Delete the web-twain Object.
+     */
+	dispose(): Promise<void>;
 }
 export interface DynamsoftViewer {
     /**
@@ -127,6 +146,7 @@ export interface DynamsoftViewer {
      */
     pageMargin: number | string;
     /**
+	 * @deprecated since version 18.4. This property will be removed in future versions. Use function `updateSelectionBoxStyle` instead.
      * [Scope] Main viewer
      * [Description] Set the border color of the selected area.
      * [Usage Notes] 'Invalid property value' is reported when the set value does not meet the CSS standard.
@@ -177,16 +197,41 @@ export interface DynamsoftViewer {
      */
     selectedPageBackground: string;
     /**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use function `updatePageNumberStyle` instead.
      * [Scope] Main viewer
      * [Description] Whether to show the page number. The default value is false.
      * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
      */
     showPageNumber: boolean;
-    /**
+	 /**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use function `updateCheckboxStyle` instead.
+     * [Scope] Main viewer
+     * [Description] Whether to show the checkbox for multiple selected. The default value is false.
+     * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
+     */
+    showCheckbox: boolean;
+	/**
      * [Scope] Main viewer
      * [Description] When set to true, will make sure the first image in the viewer is always selected when scrolling through multiple images.
      */
     autoChangeIndex: boolean;
+	    /**
+     * [Scope] Main viewer
+     * [Description] Return or set the selection mode used when acquiring images.
+     */
+    selectionMode: number | DynamsoftEnumsDWT.EnumDWT_SelectionMode;
+	/**
+     * [Scope] Main viewer
+     * [Description] Set whether to allow page dragging to reorder the pages.
+     */
+	allowPageDragging?: boolean;
+	/**
+     * Set the zoom origin.
+     */
+	zoomOrigin?: {  //18.3
+		x: string;  //Default is "center", values: "left", "right", "center".
+		y: string;  //Default is "center", values: "top", "bottom", "center"
+	} 
     /**
      * [Scope] Main viewer
      * [Description] Return the index of the next image of the currently selected image.
@@ -216,7 +261,7 @@ export interface DynamsoftViewer {
      * [Scope] Main viewer
      * [Description] Refresh the viewer, the effect is shown in "onPageRender" event
      */
-    render(): void;
+    render(): boolean;
     /**
      * [Scope] Global
      * [Description] Create an image editor with specified settings.
@@ -228,7 +273,7 @@ export interface DynamsoftViewer {
     /**
      * [Scope] Global
      * [Description] Create a thumbnail viewer with specified settings.
-     * @param editorSettings The thumbnailViewerSettings settings. If not set, the default setting is used.
+     * @param thumbnailViewerSettings The thumbnailViewerSettings settings. If not set, the default setting is used.
      */
     createThumbnailViewer(thumbnailViewerSettings?: ThumbnailViewerSettings): ThumbnailViewer;
     /**
@@ -238,7 +283,7 @@ export interface DynamsoftViewer {
      * @param location Whether to put the element in the main viewer. Allowed values are left, top, right, bottom.
      * @param ifFull Whether to display the element in full screen.
      */
-    createCustomElement(element: HTMLDivElement, location?: string, ifFull?: boolean): CustomElement;
+    createCustomElement(element: HTMLDivElement | HTMLElement, location?: string, ifFull?: boolean): CustomElement;
     /**
      * [Scope] Global
      * [Description] Return the current UI settings (from DVS itself)
@@ -259,19 +304,37 @@ export interface DynamsoftViewer {
      * [Scope] Main viewer
      * [Description] Clear the selected area(s) on the current image.
      */
-    clearSelectedAreas(): void;
+    clearSelectedAreas(): boolean;
     /**
      * [Scope] Main viewer
      * [Description] Set one or more rectangular area(s) on the specified image.
      * @param areas Specify the areas.
      */
-    setSelectedAreas(areas: Area[]): void;
+    setSelectedAreas(areas: Area[]): boolean;
     /**
      * [Scope] Main viewer
      * [Description] Fit the image to the window
      * @param type Specify a type to fit. (width, height, both)
      */
-    fitWindow(type: string): void;
+    fitWindow(type?: 'height' | 'width'): boolean;
+	/**
+     * [Scope] Main viewer
+     * Update checkbox style
+     * @argument checkboxSettings Settings for checkboxex.
+     */
+	updateCheckboxStyle(checkboxSettings?: CheckboxSettings): boolean;
+	/**
+     * [Scope] Main viewer
+	 * Update page number style
+	 * @argument pageNumberSettings Settings for page numbers.
+     */
+	updatePageNumberStyle(pageNumberSettings?: PageNumberSettings): boolean;
+	/**
+     * [Scope] Main viewer
+     * Sets the graphical style for the selection box in the Viewer.
+     * @argument selectionBoxStyleSettings Settings for selection box.
+     */
+	updateSelectionBoxStyle(selectionBoxStyleSettings?: SelectionBoxStyleSettings): boolean;
     /**
      * [Description] Set the CSS class name of the specified button defined in updateUISetting.
      * @param name Specify the button.
@@ -289,23 +352,23 @@ export interface DynamsoftViewer {
     setViewMode(
         columns: number,
         rows: number
-    ): boolean;
+    ): boolean;	
     /**
      * [Scope] Global
      * [Description] Create a Dynamsoft Viewer instance and bind it to the WebTwain instance.
      * @param element Specify an HTML element to create the viewer.
      */
-    bind(element: HTMLDivElement): boolean;
+    bind(element: HTMLDivElement | HTMLElement): boolean;
     /**
      * [Scope] Main viewer
      * [Description] Show the viewer (Main viewer, ImageEditor, ThumbnailViewer, CustomElement).
      */
-    show(): void;
+    show(): boolean;
     /**
      * [Scope] Main viewer
      * [Description] Hide the viewer(Main viewer, ImageEditor, ThumbnailViewer, CustomElement).
      */
-    hide(): void;
+    hide(): boolean;
     /**
      * [Scope] Main viewer
      * [Description] Unbind the viewer.
@@ -317,14 +380,14 @@ export interface DynamsoftViewer {
      * @param name Specify the event name.
      * @param callback The event listener
      */
-	on(name: string, callback: (event?: any, event1?: any, event2?: any) => void): void;
+	on(eventName: string, callback: (...param: any[]) => void): void;
     /**
      * [Scope] Main viewer
      * [Description] Remove the event handler.
      * @param eventName Specify the event name.
      * @param callback The event listener.
      */
-    off(eventName: string, callback?: () => void): void;
+	off(eventName: string, callback?: (...param: any[]) => void): void;
 }
 export interface EditorSettings {
     /**
@@ -332,7 +395,7 @@ export interface EditorSettings {
      * [Scope] ImageEditor viewer
      * [Description] Specify an HTML Element.
      */
-    element?: HTMLDivElement;
+    element?: HTMLDivElement | HTMLElement;
     /**
      * [Scope] ImageEditor viewer
      * [Description] The width of the image editor viewer. The default value is "100%".
@@ -390,6 +453,14 @@ export interface EditorSettings {
      * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
      */
     dialogText?: any;
+	workMode?: number | DynamsoftEnumsDWT.EnumDWT_WorkMode;//default is normal  value:normal=0, balance=1,
+	/**
+     * Set the zoom origin.
+     */
+	zoomOrigin?: {  //18.3
+		x: string;  //Default is "center", values: "left", "right", "center".
+		y: string;  //Default is "center", values: "top", "bottom", "center"
+	} 
 }
 export interface ThumbnailViewerSettings {
     /**
@@ -466,11 +537,19 @@ export interface ThumbnailViewerSettings {
      */
 	allowResizing?: boolean;
     /**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use `pageNumber` instead.
      * [Scope] Thumbnail viewer
      * [Description] Whether to show the page number. The default value is false.
      * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
      */
     showPageNumber?: boolean;
+	/**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use `checkbox` instead.
+     * [Scope] Thumbnail viewer
+     * [Description] Whether to show the checkbox for multiple selected. The default value is false.
+     * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
+     */
+    showCheckbox?: boolean;
     /**
      * [Scope] Thumbnail viewer
      * [Description] When set to true, will make sure the first image in the viewer is always selected when scrolling through multiple images.
@@ -525,76 +604,110 @@ export interface ThumbnailViewerSettings {
      * Allow any CSS rules
      */
     selectedPageBackground?: string;
+	checkbox?: CheckboxSettings;
+	pageNumber?: PageNumberSettings;
 }
 export interface CustomElement {
     /**
      * [Scope] Current Element
      * [Description] Show the element.
      */
-    show(): void;
+    show(): boolean;
     /**
      * [Scope] Current Element
      * [Description] Hide the element.
      */
-    hide(): void;
+    hide(): boolean;
     /**
      * [Scope] Current Element
      * [Description] Delete the element.
      */
-    dispose(): void;
+    dispose(): boolean;
+	
+	element?: any;
 }
 export interface ImageEditor {
     /**
      * [Scope] ImageEditor viewer
      * [Description] Show the ImageEditor viewer.
      */
-    show(): void;
+    show(): boolean;
     /**
      * [Scope] ImageEditor viewer
      * [Description] Hide the ImageEditor viewer.
      */
-    hide(): void;
+    hide(): boolean;
     /**
      * [Scope] ImageEditor viewer
      * [Description] Delete the ImageEditor viewer.
      */
     dispose(): void;
+	/**
+     * [Scope] ImageEditor viewer
+     * [Description] Update the changes in the ImageEditor to the server.
+     */
+	save():Promise<void>;
+	/**
+     * Set the zoom origin.
+     */
+	zoomOrigin?: {
+		x: string; //Default is "center", values: "left", "right", "center".
+		y: string; //Default is "center", values: "top", "bottom", "center"
+	};	
+	/**
+     * [Scope] ImageEditor viewer
+     * Set the selction box styling.
+     * @argument selectionBoxStyleSettings Settings for selection box.
+     */
+	updateSelectionBoxStyle(selectionBoxStyleSettings?: SelectionBoxStyleSettings): boolean;
 }
 export interface ThumbnailViewer {
     /**
      * [Scope] Thumbnail viewer
      * [Description] Show the Thumbnail viewer.
      */
-    show(): void;
+    show(): boolean;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Hide the Thumbnail viewer.
      */
-    hide(): void;
+    hide(): boolean;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Delete the Thumbnail viewer.
      */
-    dispose(): void;
+    dispose(): boolean;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Set the view mode.
      */
     updateViewMode(viewMode: ViewMode): void;
+	/**
+     * [Scope] Thumbnail viewer
+     * Update checkbox style
+     * @argument checkboxSettings Settings for checkboxex.
+     */
+	updateCheckboxStyle(checkboxSettings?: CheckboxSettings): void;
+	/**
+     * [Scope] Thumbnail viewer
+	 * Update page number style
+	 * @argument pageNumberSettings Settings for page numbers.
+     */
+	updatePageNumberStyle(pageNumberSettings?: PageNumberSettings): void;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Specify an event listener for the viewer event.
      * @param name Specify the event name.
      * @param callback The event listener.
      */
-    on(name: string, callback: (event?: any, event1?: any, event2?: any) => void): void;
+	on(eventName: string, callback: (...param: any[]) => void): void;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Remove the event handler.
      * @param eventName Specify the event name.
      * @param callback The event listener.
      */
-    off(eventName: string, callback?: () => void): void;
+	off(eventName: string, callback?: (...param: any[]) => void): void;
     /**
      * [Scope] Thumbnail viewer
      * [Description] Where to put the thumbnail view. The allowed values are left, top, right, bottom. The default value is left.
@@ -653,11 +766,19 @@ export interface ThumbnailViewer {
      */
 	allowResizing: boolean;
     /**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use function `updatePageNumberStyle` instead.
      * [Scope] Thumbnail viewer
      * [Description] Whether to show the page number. The default value is false.
      * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
      */
     showPageNumber: boolean;
+	/**
+	 * @deprecated since version 17.3. This property will be removed in future versions. Use function `updateCheckboxStyle` instead.
+     * [Scope] Thumbnail viewer
+     * [Description] Whether to show the checkbox for multiple selected. The default value is false.
+     * [Usage Notes] 'Invalid property value' will be reported when the specified value type is wrong or the parameter name is spelled incorrectly.
+     */
+    showCheckbox: boolean;
     /**
      * [Scope] Thumbnail viewer
      * [Description] When set to true, will make sure the first image in the viewer is always selected when scrolling through multiple images.
@@ -713,6 +834,23 @@ export interface ThumbnailViewer {
      */
     selectedImageBackground: string;
 }
+export interface DocumentEditor {
+	 /**
+     * [Scope] DocumentEditor viewer
+     * [Description] Show the DocumentEditor viewer.
+     */
+    show(): boolean;
+    /**
+     * [Scope] DocumentEditor viewer
+     * [Description] Hide the DocumentEditor viewer.
+     */
+    hide(): boolean;
+    /**
+     * [Scope] DocumentEditor viewer
+     * [Description] Delete the DocumentEditor viewer.
+     */
+    dispose(): boolean;
+}
 
 export interface ViewMode {
     columns?: number;
@@ -761,4 +899,50 @@ export interface Area {
 	top: number;
     right: number;
     bottom: number;
+}
+
+export interface CheckboxSettings {
+  visibility?: string;  //"visible":hidden", default:"hidden" 
+  width?: number | string;  //default: "24px", number unit: px, string value: "24px"/"10%", relative to parent container
+  height?: number | string;  //default: "24px", number unit: px, string value: "24px"/"10%", relative to parent container
+  background?: string;  //default: "#ffffff"
+  borderWidth?: number | string;   //default: "2px", unit: px, percentage value not supported
+  borderColor?: string;  //default : "#000000"
+  checkMarkColor?: string; //default: "#000000"
+  checkMarkLineWidth?: number | string; //default: "2px", unit: px, percentage value not supported
+  borderRadius?: number | string;   //default: 0, number unit: px, string value: "10px"/"10%", relative to itself
+  opacity?: number;  //default: 0.5, value range [0-1], value greater 1 defaults to 1
+  left?: number | string;   //default: 0, number unit: px, string value: "10px"/"10%", relative to parent container
+  top?: number | string;   //default: 0, number unit: px, string value: "10px"/"10%", relative to parent container
+  right?: number | string;   //default: "", number unit: px, string value: "10px"/"10%", relative to parent container
+  bottom?: number | string;  //default: "", number unit: px, string value: "10px"/"10%", relative to parent container
+  translateX?: number | string; //default: "", number unit: px, string value: "10px"/"10%", relative to itself
+  translateY?: number | string; //default: "";  number unit: px, string value: "10px"/"10%", relative to itself
+}
+export interface PageNumberSettings {
+  visibility?: string; //"visible": hidden", default: "hidden" 
+  width?: number | string; //default: "24px", number unit: px, string value: "24px"/"10%", relative to parent container
+  height?: number | string, //default: "24px", number unit: px, string value: "24px"/"10%", relative to parent container
+  background?: string; //default: "#ffffff"            
+  borderWidth?: number | string; //default: "1px", unit: px, percentage value not supported
+  borderColor?: string; //default: "#a79898"
+  borderRadius?: number | string;  //default: "50%", number unit: px, string value: "10px"/"10%", relative to itself
+  opacity?: number; //default: 0.5, value range [0-1], value greater 1 defaults to 1
+  color?: string;  //default : "#000000", supports #16 hexadecimal only
+  fontFamily?: string; //default : "sans-serif"
+  fontSize?: number | string; //default: 12, unit: px, percentage value not supported
+  left?: number | string;  //default: "", number unit: px, string value: "10px"/"10%", relative to parent container
+  top?: number | string;  //default: "", number unit: px, string value: "10px"/"10%", relative to parent container
+  right?: number | string;  //default: 0, number unit: px, string value: "10px"/"10%", relative to parent container
+  bottom?: number | string;  //default: 0, number unit: px, string value: "10px"/"10%", relative to parent container
+  translateX?: number | string; //default: "", number unit: px, string value: "10px"/"10%", relative to itself
+  translateY?: number | string; //default: "", number unit: px, string value: "10px"/"10%", relative to itself
+}
+export interface SelectionBoxStyleSettings {
+  borderColor?: string;  //Default: rgba(0,0,0,1). Colour in "rgba(r, g, b, a)"
+  borderWidth?: number;  //Default: 1. Pixels. Width of individual pattern segments.
+  lineDash?: [number,number];  //Default: [5,2]. Pixels. Line spacing where x is shaded pixels and y is gap in pixels.
+  handleWidth?: number;  //Default: 9. Pixels.
+  handleHeight?: number;   //Default: 9. Pixels
+  handleColor?: string;  //Default: rgba(0,0,0,1). Colour in "rgba(r, g, b, a)"
 }

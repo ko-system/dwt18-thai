@@ -1,4 +1,4 @@
-import { DynamsoftEnums as Dynamsoft } from "./Dynamsoft.Enum";
+import { DynamsoftEnumsDWT } from "./Dynamsoft.Enum";
 
 export interface WebTwainUtil {
     /**
@@ -22,6 +22,7 @@ export interface WebTwainUtil {
      */
     readonly ProductFamily: string;
     /**
+	 * @deprecated since version 18.0. This property will be removed in future versions. Use `Dynamsoft.DWT.ProductKey` instead.
      * Return or set the ProductKey.
      */
     ProductKey: string;
@@ -41,11 +42,11 @@ export interface WebTwainUtil {
      */
     GenerateURLForUploadData(
         indices: number[],
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: (
             resultURL: string,
             indices: number[],
-            type: Dynamsoft.DWT.EnumDWT_ImageType | number
+            type: DynamsoftEnumsDWT.EnumDWT_ImageType | number
         ) => void,
         failureCallback: (
             errorCode: number,
@@ -63,19 +64,20 @@ export interface WebTwainUtil {
      * @param language Specify the language.
      */
     SetLanguage(
-        language: Dynamsoft.DWT.EnumDWT_Language | number
+        language: DynamsoftEnumsDWT.EnumDWT_Language | number
     ): boolean;
     /**
      * Remove an event listener from the specified built-in event.
      * @param name Specify the event
      * @param callback The event listener
      */
-    UnregisterEvent(name: string, callback: () => void): boolean;
+    UnregisterEvent(name: string, callback?: (...arg: any[]) => void): boolean;
     /**
      * VersionInfo in the identity string of the Dynamic Web TWAIN library.
      */
     readonly VersionInfo: string;
     /**
+	 * @deprecated since version 18.0. This function will be removed in future versions. Use property `Dynamsoft.DWT.ProductKey` instead.
      * Update / set the ProductKey.
      * @param productKey the ProductKey.
      */
@@ -100,3 +102,44 @@ export interface Authorization {
      */
     Detail: any;
 }
+
+export interface BufferChangeInfo {
+    /**
+     * Action type includes 'add', 'remove', 'modify', 'shift' and 'filter'
+     */
+    action: string;
+    /**
+     * The image id (not the index) of the current page.
+     */
+    currentId: number;
+    /**
+     * All image ids.
+     */
+    imageIds: number[];
+    /**
+     * All selected image ids.
+     */
+    selectedIds: number[];
+}
+
+export interface OutputInfo {
+  /**
+   * Id of the image if it's transferred to the buffer.
+   */
+  imageId?: number;
+  /**
+   * Path of the image if it's transferred to the disk.
+   */
+  Path?: string;
+  /**
+   * Information about the image.
+   */
+  imageInfo?: object;
+  /**
+   * Extended information about the image.
+   */
+  extendedImageInfo?: object;
+}
+
+
+

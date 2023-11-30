@@ -1,4 +1,4 @@
-export namespace DynamsoftEnums.DBR {
+export namespace DynamsoftEnumsDBR {
     /** Barcode Format */
     enum EnumBarcodeFormat {
         BF_ALL = -32505857,
@@ -63,7 +63,7 @@ export namespace DynamsoftEnums.DBR {
     }
 }
 
-export namespace DynamsoftEnums.DWT {
+export namespace DynamsoftEnumsDWT {
     /** OCR Languages */
     enum EnumDWT_OCRLanguage {
         OCRL_ENG = "eng",
@@ -178,8 +178,13 @@ export namespace DynamsoftEnums.DWT {
         OCRFT_MARKFORREDACT = 2
     }
     enum EnumDWT_ConvertMode {
-        CM_DEFAULT = 0,
-        CM_RENDERALL = 1
+        CM_RENDERALL = 1,
+        CM_IMAGEONLY = 2,
+        CM_AUTO = 3,
+		/*
+		* @deprecated since version 18.4. This value will be removed in future versions. Use `ReaderOptions.renderOptions.renderAnnotations` instead.
+		*/
+		CM_RENDERALLWITHANNOTATION = 4
     }
     enum EnumErrorCode {
         DBR_1D_LICENSE_INVALID = -10017,
@@ -1570,7 +1575,9 @@ export namespace DynamsoftEnums.DWT {
         /** CCITT modified Huffman RLE. */
         PDF_RLE = 4,
         /** JPEG compression. */
-        PDF_JPEG = 5
+        PDF_JPEG = 5,
+		PDF_JP2000 = 6,
+		PDF_JBIG2 = 7
     }
     /** ICAP_PIXELTYPE values (PT_ means Pixel Type) */
     enum EnumDWT_PixelType {
@@ -1849,4 +1856,59 @@ export namespace DynamsoftEnums.DWT {
         TDM_GENERAL_WIDTH_CONCENTRATION = 2,
         TDM_SKIP = 0
     }
+	enum EnumDWT_ConfirmExitType {
+        Cancel = 0,   //cancel, Stay on the original viewer
+        Exit = 1,     //Exit original viewer without saving the image data
+        SaveAndExit = 2   //Exit original viewer with saving the image data
+    }
+	enum EnumDWT_SelectionMode {
+		Single = 0,
+		Multiple = 1
+	}
+	enum EnumDWT_ExtImageInfo {
+		default = 0, 
+        standard = 1, 
+        supported = 2 
+	}
+	enum EnumDWT_DeviceType{
+		TWAINSCANNER = 0x10, 
+		WIASCANNER = 0x20,
+		TWAINX64SCANNER = 0x40,
+		ICASCANNER = 0x80,
+		SANESCANNER = 0x100,
+		ESCLSCANNER = 0x200,
+		WIFIDIRECTSCANNER = 0x400,
+		/*
+		* @deprecated since version 18.2. This value will be removed in future versions. Use the value `WIASCANNER` instead.
+		*/
+		WIATWAINSCANNER = 0x800
+	}	
+	enum EnumDWT_ImageFormatType{
+		URL = 0,  
+		Blob = 1,
+		Base64 = 2
+	}
+	enum EnumDWT_ResponseType{
+		Text = 0,  
+		Blob = 1,
+		ArrayBuffer = 2,
+		XML = 3,
+		JSON = 4
+	}
+	enum EnumDWT_WorkMode{
+		normal = 0, // old mode, the image is processed at the server and then displayed in viewer    
+		balance = 1, //new mode, the image is processed in canvas and then updated to the server
+	}
+	enum EnumPDF_Page{
+		Page_Default = 0,
+		Page_Custom = 1,
+		Page_A4 = 2,
+		Page_A4_Reverse = 3,
+		Page_A3 = 4,
+		Page_A3_Reverse = 5,
+		Page_Letter = 6,
+		Page_Letter_Reverse = 7,
+		Page_Legal = 8,
+		Page_Legal_Reverse = 9
+	}
 }

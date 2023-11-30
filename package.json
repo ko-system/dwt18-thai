@@ -1,13 +1,12 @@
 {
     "name": "dwt",
-    "version": "18.3.0",
+    "version": "18.4.1",
     "author": {
         "name": "Dynamsoft",
         "url": "https://www.dynamsoft.com"
     },
     "license": "SEE LICENSE IN LICENSE.txt",
     "dependencies": {
-        "dynamsoft-javascript-barcode": "8.2.1"
     },
     "description": "Dynamic Web TWAIN is a TWAIN/ICA/SANE-based scanning SDK software specifically designed for web applications running on Windows/macOS/Linux. With just a few lines of code, you can develop robust applications to scan documents from TWAIN/ICA/SANE-compatible scanners, edit the scanned images and save them to a local/server file system or document repository.",
     "devDependencies": {},
@@ -16,7 +15,7 @@
         "dist",
         "samples"
     ],
-    "homepage": "https://www.dynamsoft.com/Products/WebTWAIN_Overview.aspx",
+    "homepage": "https://www.dynamsoft.com/web-twain/overview/",
     "keywords": [
         "TWAIN",
         "JavaScript",

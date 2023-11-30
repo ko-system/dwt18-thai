@@ -1,4 +1,4 @@
-import { DynamsoftEnums as Dynamsoft } from "./Dynamsoft.Enum";
+import { DynamsoftEnumsDWT } from "./Dynamsoft.Enum";
 import { WebTwainUtil } from "./WebTwain.Util";
 
 export interface WebTwainIO extends WebTwainUtil {
@@ -24,11 +24,13 @@ export interface WebTwainIO extends WebTwainUtil {
      */
     HttpFieldNameOfUploadedImage: string;
     /**
-     * [Deprecation] Return or set the password used to log into the HTTP server.
+	 * @deprecated since version 10.1. This property will be removed in future versions. 
+     * Return or set the password used to log into the HTTP server.
      */
     HTTPPassword: string;
     /**
-     * [Deprecation] Return or set the user name used to log into the HTTP server.
+     * @deprecated since version 10.1. This property will be removed in future versions. 
+     * Return or set the user name used to log into the HTTP server.
      */
     HTTPUserName: string;
     /**
@@ -71,44 +73,54 @@ export interface WebTwainIO extends WebTwainUtil {
     /**
      * Return or set the compression type for TIFF files.
      */
-    TIFFCompressionType: Dynamsoft.DWT.EnumDWT_TIFFCompressionType | number;
+    TIFFCompressionType: DynamsoftEnumsDWT.EnumDWT_TIFFCompressionType | number;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the name of the person who creates the PDF document.
      */
     PDFAuthor: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the compression type of PDF files. This is a runtime property.
      */
-    PDFCompressionType: Dynamsoft.DWT.EnumDWT_PDFCompressionType;
+    PDFCompressionType: DynamsoftEnumsDWT.EnumDWT_PDFCompressionType | number;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the date when the PDF document is created.
      */
     PDFCreationDate: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the name of the application that created the original document, if the PDF document is converted from another form.
      */
     PDFCreator: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the keywords associated with the PDF document.
      */
     PDFKeywords: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the date when the PDF document is last modified.
      */
     PDFModifiedDate: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the name of the application that converted the PDF document from its native.
      */
     PDFProducer: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the subject of the PDF document.
      */
     PDFSubject: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the title of the PDF document.
      */
     PDFTitle: string;
     /**
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `PDF.Write.Setup` instead.
      * Return or set the value of the PDF version.
      */
     PDFVersion: string;
@@ -134,7 +146,7 @@ export interface WebTwainIO extends WebTwainUtil {
      */
     ConvertToBase64(
         indices: number[],
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: (
             result: Base64Result,
             indices: number[],
@@ -157,7 +169,7 @@ export interface WebTwainIO extends WebTwainUtil {
      */
     ConvertToBlob(
         indices: number[],
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: (
             result: Blob,
             indices: number[],
@@ -196,7 +208,7 @@ export interface WebTwainIO extends WebTwainUtil {
     FTPDownloadEx(
         host: string,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: () => void,
         failureCallBack: (
             errorCode: number,
@@ -236,7 +248,7 @@ export interface WebTwainIO extends WebTwainUtil {
         host: string,
         index: number,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: () => void,
         failureCallback: (
             errorCode: number,
@@ -305,7 +317,7 @@ export interface WebTwainIO extends WebTwainUtil {
     FTPUploadAsMultiPageTIFF(
         host: string,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: () => void,
         failureCallback: (
             errorCode: number,
@@ -341,13 +353,14 @@ export interface WebTwainIO extends WebTwainUtil {
     HTTPDownloadEx(
         host: string,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: () => void,
         failureCallback: (
             errorCode: number,
             errorString: string) => void
     ): void;
     /**
+	 * @deprecated since version 10.1. This function will be removed in future versions. Use `HTTPDownload` or `HTTPDownloadEx` instead.
      * Download the specified file via a HTTP Post request.
      * @param host The HTTP Host.
      * @param path Specify the path of the file to download.
@@ -361,7 +374,7 @@ export interface WebTwainIO extends WebTwainUtil {
     HTTPDownloadThroughPost(
         host: string,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         onEmptyResponse: () => void,
         onServerReturnedSomething: (
             errorCode: number,
@@ -403,8 +416,8 @@ export interface WebTwainIO extends WebTwainUtil {
     HTTPUpload(
         URL: string,
         indices: number[],
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
-        dataFormat: Dynamsoft.DWT.EnumDWT_UploadDataFormat | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
+        dataFormat: DynamsoftEnumsDWT.EnumDWT_UploadDataFormat | number,
         fileName: string,
         onEmptyResponse: () => void,
         onServerReturnedSomething: (
@@ -415,8 +428,8 @@ export interface WebTwainIO extends WebTwainUtil {
     HTTPUpload(
         URL: string,
         indices: number[],
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
-        dataFormat: Dynamsoft.DWT.EnumDWT_UploadDataFormat | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
+        dataFormat: DynamsoftEnumsDWT.EnumDWT_UploadDataFormat | number,
         onEmptyResponse: () => void,
         onServerReturnedSomething: (
             errorCode: number,
@@ -432,6 +445,7 @@ export interface WebTwainIO extends WebTwainUtil {
             response: string) => void
     ): void;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions.
      * Upload the specified image via a HTTP Put request.
      * @param host The HTTP Host.
      * @param index Specify the image.
@@ -446,7 +460,7 @@ export interface WebTwainIO extends WebTwainUtil {
         host: string,
         index: number,
         path: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback: () => void,
         failureCallback: (
             errorCode: number,
@@ -494,7 +508,7 @@ export interface WebTwainIO extends WebTwainUtil {
         index: number,
         target: string,
         fileName: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         onEmptyResponse: () => void,
         onServerReturnedSomething: (
             errorCode: number,
@@ -634,7 +648,7 @@ export interface WebTwainIO extends WebTwainUtil {
      */
     LoadImageEx(
         fileName: string,
-        type: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        type:DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         successCallback?: () => void,
         failureCallback?: (
             errorCode: number,
@@ -650,7 +664,7 @@ export interface WebTwainIO extends WebTwainUtil {
      */
     LoadImageFromBase64Binary(
         imageData: string,
-        imageType: Dynamsoft.DWT.EnumDWT_ImageType,
+        imageType: DynamsoftEnumsDWT.EnumDWT_ImageType,
         successCallback?: () => void,
         failureCallback?: (
             errorCode: number,
@@ -685,7 +699,8 @@ export interface WebTwainIO extends WebTwainUtil {
             errorString: string) => void
     ): void | boolean;
     /**
-     * [Deprecation] Return or set how many threads can be used when you upload files through POST.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. 
+     * Return or set how many threads can be used when you upload files through POST.
      */
     MaxInternetTransferThreads: number;
     /**
@@ -832,14 +847,14 @@ export interface WebTwainIO extends WebTwainUtil {
             errorString: string) => void
     ): void | boolean;
     /**
-     * [Deprecation] Return an index from the selected indices array. Read SelectedImagesIndices instead.
-     * [Alternative] Read SelectedImagesIndices instead.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use `SelectedImagesIndices` instead.
+     * Return an index from the selected indices array. 
      * @param indexOfIndices Specify the index of the specified image.
      */
     SaveSelectedImagesToBase64Binary(indexOfIndices: number): number;
     /**
-     * [Deprecation] Saves the selected images in the buffer to a base64 string.
-     * [Alternative] Use ConvertToBase64 instead.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use `ConvertToBase64` instead.
+     * Saves the selected images in the buffer to a base64 string.
      * @param successCallback A callback function that is executed if the request succeeds.
      * @param failureCallback A callback function that is executed if the request fails.
      * @argument result The resulting array of strings.
@@ -921,10 +936,36 @@ export interface WebTwainIO extends WebTwainUtil {
         flag: number
     ): boolean;
     /**
-     * [Deprecation] Set a cookie string into the Http Header to be used when uploading scanned images through POST.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions.
+     * Set a cookie string into the Http Header to be used when uploading scanned images through POST.
      * @param cookie The cookie.
      */
     SetCookie(cookie: string): boolean;
+	/**
+     * Share the specified image(s) for Android. This function is only for Android.
+     * @param fileName The name to save to.
+     * @param indices Specify the image(s).
+     * @param type The format of the file.
+     */
+	ShareImages(fileName: string, indices: number[], type: DynamsoftEnumsDWT.EnumDWT_ImageType):Promise<void>;
+	/**
+     * Copy selected area to Blob or base64.
+     * @param index Image to be copied from.
+	 * @param area Area of image to be copied. X,Y is top left corner origin, width and height is size of area to be copied.
+     * @param type The target image type of the blob/base64.
+	 * @param imageFormatType Specify if the return should be Blob or base64 string. Only support blob or base64
+     */
+	OutputSelectedAreaAsync(
+        index: number, 
+        area: {
+            x: number, 
+            y: number,  
+            width: number,
+            height: number
+        },
+        type: DynamsoftEnumsDWT.EnumDWT_ImageType | number, 
+        imageFormatType: DynamsoftEnumsDWT.EnumDWT_ImageFormatType | number, 
+	): Promise < Blob|string > ;
 }
 export interface Base64Result {
     /**

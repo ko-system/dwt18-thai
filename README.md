@@ -1,56 +1,60 @@
-# Dynamic Web TWAIN SDK
+# Dynamic Web TWAIN SDK for Scanner and Camera
 ![version](https://img.shields.io/npm/v/dwt.svg)
 ![downloads](https://img.shields.io/npm/dm/dwt.svg) 
 ![jsdelivr](https://img.shields.io/jsdelivr/npm/hm/dwt.svg)
 ![](https://img.shields.io/snyk/vulnerabilities/npm/dwt.svg)
 
-Cross-platform and cross-browser JavaScript library for web document scanning.
+[Dynamic Web TWAIN](https://www.dynamsoft.com/web-twain/overview/) is a cross-platform scanning SDK designed for web document management applications. With just a few lines of JavaScript code, you can develop robust web applications to scan documents, edit images and save them to file systems. To see it in action, please visit <a href="https://demo.dynamsoft.com/web-twain/" target="_blank">**this online demo**</a>
+
+Note: Dynamic Web TWAIN SDK **v18.4.1** is built in this package. For more detail, check the [Version Info](#versions).
 
 ## Table of Contents
-- [Introduction](#Introduction)
-- [Online Demo](#Online-Demo)
-- [License Key](#License-Key)
-- [Installation](#Installation)
-- [Deployment](#Deployment)
-- [Quick Start](#Quick-Start)
-- [Documentation](#Documentation)
-- [Features](#Features)
-- [Contact Us](#Contact-Us)
-- [License Agreement](#License-Agreement)
-- [Versions](#Versions)
+- [Supported Environments](#supported-environments)
+- [License Key](#license-key)
+- [Installation](#installation)
+- [Deployment](#deployment)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [Features](#features)
+- [Contact Us](#contact-us)
+- [License Agreement](#license-agreement)
+- [Versions](#versions)
 
-## Introduction
+## Supported Environments
 
-[Dynamic Web TWAIN](https://www.dynamsoft.com/web-twain/overview/) is a cross-platform scanning SDK designed for web document management applications. With just a few lines of JavaScript code, you can develop robust web applications to scan documents, edit images and save them to file systems on **Windows**, **Linux** and **macOS**. You can even use your mobile devices running iOS | iPadOS | Android with the library starting in 17.0!
+### Supported Image Capturing Devices
+- Physical Document Scanners
+- Desktop Webcam
+- Mobile Camera
+
+### Supported Web Browsers
+- Chrome
+- Firefox
+- Edge
+- Safari
 
 ### Supported OSs
 - Windows
 - Linux
 - macOS
-- Android / iOS (Remote scanner or camera)
+- Android 
+- iOS (Remote scanner)
 
 ### Supported CPU Architectures
 - x86/x64
 - MIPS64
 - ARM64
 
-### Supported Web Browsers
-- Firefox
-- Edge
-- Chrome
-- Safari
-
-## Online Demo
-https://demo.dynamsoft.com/web-twain/
-
 ## License Key
-Get a [30-day FREE Trial license](https://www.dynamsoft.com/customer/license/trialLicense/?product=dwt&utm_source=npm).
+[![](https://img.shields.io/badge/Get-30--day%20FREE%20Trial%20License-blue)](https://www.dynamsoft.com/customer/license/trialLicense/?product=dwt&utm_source=npm)
 
 ## Installation
 
 - Official web site
-
-    [Dynamic Web TWAIN SDK for Windows, Linux, macOS](https://www.dynamsoft.com/web-twain/downloads)
+	
+    **Dynamic Web TWAIN SDK for Windows, Linux, macOS**
+    
+    [![](https://img.shields.io/badge/Download-Offline%20SDK-orange)](https://www.dynamsoft.com/web-twain/downloads)
 
 - NPM
 
@@ -73,176 +77,90 @@ If you are making use of the `CDN` [jsDelivr](https://cdn.jsdelivr.net/npm/dwt),
 
 ## Quick Start
 
-### For Dynamic Web TWAIN Installer
-1. Create a new web project and copy the `<Dynamic Web TWAIN SDK {Version Number}>\Resources` folder to your project directory.
+### Step 1 Create a HTML page and load **`dynamsoft.webtwain.min.js`** into your page:
 
-2. Create an empty HTML page:
-
-    ![image](https://www.dynamsoft.com/Support/DWTGuide/Documents/res/Images/ResourcesAndHTML.png)
-
-3. Include the Dynamic Web TWAIN JavaScript library:
-
-    ```html
-    <script type="text/javascript" src="Resources/dynamsoft.webtwain.initiate.js"></script>
-    <script type="text/javascript" src="Resources/dynamsoft.webtwain.config.js"></script>
-    ```
-
-
-4. Add Dynamic Web TWAIN container:
-
-    ```html
-    <div id="dwtcontrolContainer"> </div>
-    ```
-
-5. Add a Scan button:
-
-    ```html
-    <input type="button" value="Scan" onclick="AcquireImage();" />
-    <script type="text/javascript"> 
-        function AcquireImage() {
-			var DWObject = Dynamsoft.DWT.GetWebTwain('dwtcontrolContainer');
-            if (DWObject) {
-                DWObject.SelectSource(function () {
-                    var OnAcquireImageSuccess, OnAcquireImageFailure;
-                    OnAcquireImageSuccess = OnAcquireImageFailure = function () {
-                        DWObject.CloseSource();
-                    };
-                    DWObject.OpenSource();
-                    DWObject.IfDisableSourceAfterAcquire = true;
-                    DWObject.AcquireImage(OnAcquireImageSuccess, OnAcquireImageFailure);
-                }, function () {
-                    console.log('Failed to select a source!');
-                });
-            }
-        }
-    </script>
-    ```
-
-Full Sample
-
-```html
+   ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello World</title>
-    <script type="text/javascript" src="Resources/dynamsoft.webtwain.initiate.js"></script>
-    <script type="text/javascript" src="Resources/dynamsoft.webtwain.config.js"></script>
+	<title>Hello World</title>
+	<script src="dist/dynamsoft.webtwain.min.js"></script>
 </head>
 <body>
-    <div id="dwtcontrolContainer" ></div>
-    <input type="button" value="Scan" onclick="AcquireImage();" />
-    <script type="text/javascript">
-    function AcquireImage() {
-	var DWObject = Dynamsoft.DWT.GetWebTwain('dwtcontrolContainer');
-	if (DWObject) {		
-		DWObject.SelectSource(function () {		
-		var OnAcquireImageSuccess = OnAcquireImageFailure = function () {
-		    DWObject.CloseSource();
-		};
-		DWObject.OpenSource();
-		DWObject.IfDisableSourceAfterAcquire = true;
-		DWObject.AcquireImage(OnAcquireImageSuccess, OnAcquireImageFailure);
-            }, function () {
-		console.log('SelectSource failed!');
-            });
-        }
-    }
-    </script>
 </body>
 </html>
-```
+   ```
 
-### For NPM 
-1. Create a HTML page and load **`dynamsoft.webtwain.min.js`** into your page:
+   > Note that a **relative path** is used. You might want to change it based on where you are putting your code. The best practise is to put all the files on your own server and under the same domain as your web application.
 
-    ```html
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Hello World</title>
-        <script src="dist/dynamsoft.webtwain.min.js"></script>
-    </head>
-    <body>
-    </body>
-    </html>
-    ```
+### Step 2 Add a script tag and make initial settings:
 
-    > Note that a **relative path** is used. You might want to change it based on where you are putting your code. The best practise is to put all the files on your own server and under the same domain as your web application.
+   ```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello World</title>
+	<script src="dist/dynamsoft.webtwain.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	  Dynamsoft.DWT.ResourcesPath = "dist";
+	  Dynamsoft.DWT.ProductKey = 't0140cQMAA...';
+      Dynamsoft.DWT.Containers = [{ ContainerId: 'dwtcontrolContainer', Width: 270, Height: 350 }];
+	</script>
+</body>
+</html>
+   ```
 
-2. Add a script tag and make initial settings:
+> Note that `ResourcesPath`  must be set in order to use the library. 
 
-    ```html
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>Hello World</title>
-    <script src="dist/dynamsoft.webtwain.min.js"></script>
-    </head>
-    <body>
-    <script type="text/javascript">
-        Dynamsoft.DWT.ResourcesPath = "dist";
-        Dynamsoft.DWT.ProductKey = 't0140cQMAA...';
-    </script>
-    </body>
-    </html>
-    ```
+   1. `ResourcesPath` is a relative path to where you put the directory "/dist/" and all the files in it.
+   2. If you don't have a valid `ProductKey`, you can [request a trial key](https://www.dynamsoft.com/customer/license/trialLicense?product=dwt) to use.
 
-    > Note that `ResourcesPath` and `ProductKey` must be set in order to use the library. 
 
-    1. `ResourcesPath` is a relative path to where you put the directory "/dist/" and all the files in it.
-    2. If you don't have a valid `ProductKey`, you can [request a trial key](https://www.dynamsoft.com/customer/license/trialLicense) to use.
+### Step 3 Write code to use the package to do a simple document scan
 
-3. Write code to use the package to do a simple document scan
+> The following code demonstrates the minimum code needed to use the package. Note the addition of HTML elements as well as JavaScript code. For more sophisticated sample or demo, check out the [Sample Gallery](https://www.dynamsoft.com/web-twain/resources/code-gallery/) and our [Github Repositories](https://github.com/dynamsoft-dwt).
 
-    > The following code demonstrates the minimum code needed to use the package. Note the addition of HTML elements as well as JavaScript code. For more sophisticated sample or demo, check out the [Sample Gallery](https://www.dynamsoft.com/web-twain/resources/code-gallery/) and our [Github Repositories](https://github.com/dynamsoft-dwt).
-
-    ```html
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <title>Hello World</title>
-    <script src="dist/dynamsoft.webtwain.min.js"></script>
-    </head>
-    <body>
-    <input type="button" value="Scan" onclick="AcquireImage();" />
-    <div id="dwtcontrolContainer"></div>
-    <script type="text/javascript">
-        Dynamsoft.DWT.ResourcesPath = "dist";
-        Dynamsoft.DWT.ProductKey = 't0068MgAAAFgW05zp85JXvbVigG3piPN2/luDlLjQF55OJy48LymLDkYdTg6jZQeQ2SJ3ODHgLtAuKCpANd+NB4SXZQg3yXE='; // Put your own key here
-        window.onload = function () {
-        Dynamsoft.DWT.Load();
-        };
-        var DWObject;
-        function Dynamsoft_OnReady() {
-        // dwtcontrolContainer is the id of the DIV to create the WebTwain instance in.
-        DWObject = Dynamsoft.DWT.GetWebTwain('dwtcontrolContainer');
-        }
-        function AcquireImage() {
-        if (DWObject) {
-            DWObject.SelectSource(function () {
-            DWObject.OpenSource();
-            DWObject.AcquireImage(
-                {
-                PixelType: Dynamsoft.EnumDWT_PixelType.TWPT_RGB,
-                Resolution: 200,
-                IfDisableSourceAfterAcquire: true
-                },
-                function () {
-                console.log("Successful!");
-                },
-                function (settings, errCode, errString) {
-                alert(errString)
-                }
-            );
-            }, function () {
-            alert('SelectSource failed!');
-            });
-        }
-        }
-    </script>
-    </body>
-    </html>
-    ```
+   ```html
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello World</title>
+	<script src="dist/dynamsoft.webtwain.min.js"></script>
+</head>
+<body>
+	<input type="button" value="Scan" onclick="AcquireImage();" />
+	<div id="dwtcontrolContainer"></div>
+	<script type="text/javascript">
+	  Dynamsoft.DWT.ResourcesPath = "dist";
+	  Dynamsoft.DWT.ProductKey = 't0140cQMAA...'; // Put your own key here
+      Dynamsoft.DWT.Containers = [{ ContainerId: 'dwtcontrolContainer', Width: 270, Height: 350 }];
+	  window.onload = function () {
+	    Dynamsoft.DWT.Load();
+	  };
+	  var DWObject;
+	  function Dynamsoft_OnReady() {
+	    // dwtcontrolContainer is the id of the DIV to create the WebTwain instance in.
+	    DWObject = Dynamsoft.DWT.GetWebTwain('dwtcontrolContainer');
+	  }
+	  function AcquireImage() {
+	    if (DWObject) {
+	      DWObject.SelectSourceAsync().then(function(){
+	        return DWObject.AcquireImageAsync({
+	          PixelType: Dynamsoft.DWT.EnumDWT_PixelType.TWPT_RGB,
+	          Resolution: 200,
+              IfCloseSourceAfterAcquire: true
+	        });
+	      }).catch(function (exp) {
+	        alert(exp.message);
+	      });
+	    }
+	  }
+	</script>
+</body>
+</html>
+   ```
 
 ## Documentation
 
@@ -252,27 +170,22 @@ Full Sample
 
 ## Features
 
-- Document Scanning
-- Document Editing
-- Saving, Uploading and Downloading
-- Opening Local Files
+### Dynamsoft Service for Scanner 
 
-| Document Scanning        | Desktop            | Mobile  |
-| ------------- |:-------------:| -----:|
-| Supports up to TWAIN specification 2.3        | Windows Client Only | N/A |
-| SANE compatible                               | Linux Client Only      |   N/A|
-| Supports up to TWAIN specification 1.9; ICA compatible | macOS Client Only     |    N/A |
-| Supports capturing via built-in mobile camera    | N/A | ✓ |
-| Optional disk caching mechanism for high volume scanning (thousands of pages)    | ✓      |   N/A |
-| Built-In Auto Document Feeder (ADF) and multiple image acquisition | ✓      |    N/A |
-| Offers duplex scanning mode   | ✓ | N/A |
-|Supports blank page detection    | ✓      |   N/A |
-|Built-in wizard mode intelligently manages TWAIN states | ✓      |    N/A |
-| Supports setting up image acquisition parameters (resolution, pixel type, bit depth, brightness, contrast, page size, unit, etc.) | ✓ | N/A |
-| Provides native and disk file image transfer modes    | ✓      |   N/A |
-| Buffered memory transfer mode | Windows Client Only      |    N/A |
-
-
+| Features     | Windows            | Linux  | macOS|
+| ------------- |:-------------:| -----:| -----:|
+| Supports up to TWAIN specification 2.3        | :heavy_check_mark: | :x: |:x:|
+| SANE compatible                               | :x:     |   :heavy_check_mark:|:x:|
+| Supports up to TWAIN specification 1.9; ICA compatible | :x:|  :x:   |    :heavy_check_mark: |
+| Supports capturing document  | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
+| Supports editing document     | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
+| Optional disk caching mechanism for high volume scanning (thousands of pages)    | :heavy_check_mark:     |   :heavy_check_mark: |:heavy_check_mark:|
+| Built-In Auto Document Feeder (ADF) and multiple image acquisition | :heavy_check_mark:      |    :heavy_check_mark: |:heavy_check_mark:|
+| Offers duplex scanning mode   | :heavy_check_mark: | :heavy_check_mark: |:heavy_check_mark:|
+| Supports blank page detection    | :heavy_check_mark:     |   :heavy_check_mark: |:heavy_check_mark:|
+| Supports setting up image acquisition parameters (resolution, pixel type, bit depth, brightness, contrast, page size, unit, etc.) | :heavy_check_mark: |:heavy_check_mark: |:heavy_check_mark:|
+| Provides native and disk file image transfer modes    | :heavy_check_mark:    |   :heavy_check_mark: |:heavy_check_mark:|
+| Buffered memory transfer mode | :heavy_check_mark:     |    :x: |:x:|
 
 [More](https://www.dynamsoft.com/web-twain/features/)
 
@@ -283,40 +196,50 @@ Full Sample
 ## License Agreement
 https://www.dynamsoft.com/Products/WebTWAIN_License.aspx
 
+
 ## Versions
 
 >`Dynamsoft Service (DynamsoftService.exe, 64bit)`
 >
->**v17.0** (build version 1, 7, 0, 0330)
+>**v18.4.1** (build version 1, 8, 4, 0926)
 >
->`Dynamsoft Service Manager (DWASManager_17000330.dll, 64bit)`
+>`Dynamsoft Service Manager (DWASManager_18400926.dll, 64bit)`
 >
->**v17.0** (build version 17, 0, 0, 0330)
+>**v18.4.1** (build version 18, 4, 0, 0926)
 >
->`Dynamic Web TWAIN (dwt_17.0.0.0330.dll, 64bit)`
+>`Device Manager (DeviceManager_18400926.dll, 64bit)`
 >
->**v17.0** (build version 17, 0, 0, 0330)
+>**v18.4.1** (build version 18, 4, 0, 0926)
 >
->`Dynamsoft PDF Rasterizer (DynamicPdfRx64_11.2.0.0330.dll, 64bit)`
+>`Dynamic Web TWAIN (dwt_18.4.1.1013.dll, 64bit)`
 >
->**v17.0** (build version 11, 2, 0, 0330)
+>**v18.4.1** (build version 18,4, 1, 1013)
 >
->`Dynamsoft OCR Basic Engine (DynamicOCRx64_10.0.0.0618.dll, 64bit)`
+>`Dynamsoft PDF Rasterizer (DynamicPdfRx64_11.5.1.0926.dll, 64bit)`
 >
->**v17.0** (build version 10, 0, 0, 0618)
+>**v18.4.1** (build version 11, 5, 1, 0926)
 >
->`Dynamsoft Barcode Reader (dbrx64_8.2.0.0330.dll, 64bit)`
+>`Dynamsoft Barcode Reader (dbrx64_9.6.0.0926.dll, 64bit)`
 >
->**v8.2.0** (build version 8, 2, 0, 0330)
+>**v9.6.0** (build version 9, 6, 0, 0926)
 >
 >`Dynamsoft Webcam Addon (DynamicWebcamx64_15.0.0.0625.dll, 64bit)`
 >
->**v17.0** (build version 15, 0, 0, 0625)
+>**v18.4.1** (build version 15, 0, 0, 0625)
 >
->`Dynamsoft Upload Module (UploadModule_1.7.0.0330.dll, 64bit)`
+>`Dynamsoft Upload Module (UploadModule_1.8.4.0926.dll, 64bit)`
 >
->**v17.0** (build version 1, 7, 0, 0330)
+>**v18.4.1** (build version 1, 8, 4, 0926)
 
 ## Changelog
 
 Check out the [release notes](https://www.dynamsoft.com/web-twain/docs/info/schedule/stable.html?product=dwt&utm_source=npm) of the Dynamic Web TWAIN library.
+
+
+**Note**
+
+If you are upgrading from the old versions to V17.1+, please add the following code after Dynamsoft.DWT.ProductKey to make [Dynamsoft.DWT.Load](https://www.dynamsoft.com/web-twain/docs/info/api/Dynamsoft_WebTwainEnv.html#load) take effect.
+
+> Dynamsoft.DWT.Containers = [{ ContainerId: 'dwtcontrolContainer', Width: 270, Height: 350 }];
+
+Otherwise, the initialization will fail.

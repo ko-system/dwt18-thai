@@ -1,12 +1,16 @@
-import { DynamsoftEnums } from "./Dynamsoft.Enum";
+import { DynamsoftEnumsDBR} from "./Dynamsoft.Enum";
+import { DynamsoftEnumsDWT} from "./Dynamsoft.Enum";
 import { WebTwain } from "./WebTwain";
 import { Settings } from "./Addon.OCRPro";
 import { FileUploader } from "./Dynamsoft.FileUploader";
+import { RemoteScanObject } from "./RemoteScan";
+import { DeviceConfiguration, ServiceInfo, Device, CapabilityDetails, Capabilities} from "./WebTwain.Acquire";
 
 export namespace DynamsoftStatic {
     let Lib: DynamsoftLib;
     let MSG: Messages;
-    let DWT: DWT;
+    let DWT: (DWTPro & typeof DynamsoftEnumsDWT);
+    let DBR: typeof DynamsoftEnumsDBR;
     let managerEnv: ManagerEnv;
     let FileUploader: FileUploader;
     namespace WebTwain {
@@ -17,11 +21,14 @@ export namespace DynamsoftStatic {
         }
     }
 }
+
+
 export interface DWTInitialConfig {
     WebTwainId: string;
     Host?: string;
     Port?: string;
-    SSLPort?: string;
+    PortSSL?: string;
+	UseLocalService?: boolean;
 }
 export interface DynamsoftLib {
     /**
@@ -152,10 +159,6 @@ export interface DSLibEnv {
      */
     readonly bWin: boolean;
     /**
-     * Whether the operating system is 64bit Windows.
-     */
-    readonly bWin64: boolean;
-    /**
      * The base path.
      */
     readonly basePath: string;
@@ -184,14 +187,6 @@ export interface DSLibEnv {
      */
     isPadViewer(): boolean;
     /**
-     * Whether the platform is 64bit.
-     */
-    readonly isX64: boolean;
-    /**
-     * Information about macOSX.
-     */
-    readonly macOSX: string;
-    /**
      * OS version.
      */
     readonly osVersion: string;
@@ -212,7 +207,7 @@ export interface DSLibEnv {
      */
     readonly strIEVersion: number | string;
 }
-export interface DWT {
+export interface DWTPro {
     /**
      * Whether to install the ActiveX with CAB.
      */
@@ -225,6 +220,7 @@ export interface DWT {
      * Whether to create a WebTwain instance automatically upon page load.
      */
     AutoLoad: boolean;
+	Host: string;
     /**
      * Close a dialog opened by the method ShowDialog.
      */
@@ -280,15 +276,31 @@ export interface DWT {
      */
     DeleteDWTObject(Id: string): boolean;
     /**
-     * Return the WebTwain instance specified by its ContainerId. If no parameter is provided, the first valid WebTwain instance is returnd.
-     * @param ContainerId The ContainerId.
+     * Return the WebTwain instance specified by its ContainerId or WebTwainId. If no parameter is provided, the first valid WebTwain instance is returnd.
+     * @param ContainerIdOrWebTwainId The ContainerId or WebTwainId.
      */
-    GetWebTwain(ContainerId?: string): WebTwain;
+    GetWebTwain(ContainerIdOrWebTwainId?: string): WebTwain;
     /**
-     * Return the WebTwain instance specified by its WebTwainId. If no parameter is provided, the first valid WebTwain instance is returnd.
-     * @param WebTwainId The WebTwainId.
+     * Return the WebTwain instance specified by its ContainerId or WebTwainId. If no parameter is provided, the first valid WebTwain instance is returnd.
+     * @param ContainerIdOrWebTwainId The ContainerId or WebTwainId.
      */
-    GetWebTwainEx(WebTwainId?: string): WebTwain;
+    GetWebTwainEx(ContainerIdOrWebTwainId?: string): WebTwain;
+	/**
+     * Download and update the certificate on the local system.
+     * @param url The URL to download the certificate (typically a ZIP file).
+     * @param successCallback A callback function that is executed if the request succeeds.
+     * @param failureCallback A callback function that is executed if the request fails.
+     * @argument errorCode The error code.
+     * @argument errorString The error string.
+     */
+    UpdateCert(
+        url: string,
+        successCallback: () => void,
+        failureCallback: (
+            errorCode: number,
+            errorString: string
+        ) => void
+    ): void;
     /**
      * Whether or not an md5 header `dwt-md5` should be included in HTTP upload requests.
      */
@@ -312,23 +324,27 @@ export interface DWT {
     /**
      * A callback function that is executed when the WebTwain related files are not found.
      */
-    OnWebTwainNotFound: () => {};
+    OnWebTwainNotFound: () => void;
     /**
      * A callback function that is executed after a time-consuming operation.
      */
-    OnWebTwainPostExecute: () => {};
+    OnWebTwainPostExecute: () => void;
     /**
      * A callback function that is executed before a time-consuming operation.
      */
-    OnWebTwainPreExecute: () => {};
+    OnWebTwainPreExecute: () => void;
     /**
      * A callback function that is executed when a WebTwain instance is created.
      */
-    OnWebTwainReady: () => {};
+    OnWebTwainReady: () => void;
+	/**
+     * A callback function that is executed when a WebTwain instance is faild.
+     */
+    OnWebTwainError: (error: any) => void;
     /**
      * A callback function that is executed right before the creation of a WebTwain instance.
      */
-    OnWebTwainWillInit: () => {};
+    OnWebTwainWillInit: () => void;
     /**
      * The version of the PDF module (not the rasterizer).
      */
@@ -342,12 +358,29 @@ export interface DWT {
      */
     ProductKey: string;	
     /**
+	 * @deprecated since version 18.0. This property will be removed in future versions. Use `Dynamsoft.DWT.ProductKey` instead.
 	 * LTS Settings
-	*/
+	 */
 	licenseServer?: string[];
+	/**
+	 * @deprecated since version 18.0. This property will be removed in future versions. Use `Dynamsoft.DWT.ProductKey` instead.
+	 * LTS Settings
+	 */
 	handshakeCode?: string;
+	/**
+	 * @deprecated since version 18.0. This property will be removed in future versions. Use `Dynamsoft.DWT.ProductKey` instead.
+	 * LTS Settings
+	 */
 	sessionPassword?: string;
+	/**
+	 * @deprecated since version 18.0. This property will be removed in future versions. Use `Dynamsoft.DWT.ProductKey` instead.
+	 * LTS Settings
+	 */
 	organizationID?: string;
+	/*
+	 * @deprecated since version 18.2. This property will be removed in future versions. Use RegisterEvent `OnWebTwainError` instead.
+	 */
+	licenseException?: string;
     /**
      * The product name.
      */
@@ -366,6 +399,10 @@ export interface DWT {
      * Set or return where the library looks for resources files including service installers, CSS, etc.
      */
     ResourcesPath: string;
+	/**
+     * Set or return service installer path.
+     */
+	ServiceInstallerLocation: string;
     /**
      * The version of the Linux edition (the service, not wasm).
      */
@@ -391,10 +428,6 @@ export interface DWT {
      * Remove and destroy all WebTwain instances.
      */
     Unload(): void;
-    /**
-     * Whether to download the wasm for Camera Addon to use on initialization.
-     */
-    UseCameraAddonWasm: boolean;
     /**
      * Whether to use the library in Local-Service mode or WASM mode.
      */
@@ -424,6 +457,22 @@ export interface DWT {
      * Trial, UseDefaultInstallUI, ViewerJSIntegerited,
      * inited, _srcUseLocalService
      */
+	 IfCheckDCP: boolean;
+	 
+	OnLicenseException: () => void;
+    /**
+     * Dynamsoft.DWT.DeviceFriendlyName 
+     */
+	DeviceFriendlyName: string;
+    /**
+     * Based on serviceInfo, return the existing object if already exists, otherwise, create a new one.
+     * @param serverUrl The URL of the proxy server: https(http)://domain_name:port (default: 443).
+     */
+	CreateRemoteScanObjectAsync(serverUrl: string): Promise<RemoteScanObject>;
+	/**
+     * Dynamsoft.DWT.ConnectWithSocket 
+     */
+	ConnectWithSocket: boolean;
 }
 export interface DisplayInfo {
     loaderBarSource?: string;
@@ -475,7 +524,7 @@ export interface ManagerEnv {
  * Interface for a WebTwain profile.
  */
 export interface Container {
-    WebTwainId: string;
+    WebTwainId?: string;
     ContainerId?: string;
     Width?: string | number;
     Height?: string | number;
@@ -500,5 +549,20 @@ export interface WasmConfig {
      */
 	fetchOptions: any;
 }
-declare const Dynamsoft: (typeof DynamsoftEnums & typeof DynamsoftStatic);
+export interface DWTInstall {
+	OnWebTwainNotFoundOnWindowsCallback?: (...arg: any[]) => void;
+	OnWebTwainNotFoundOnLinuxCallback?: (...arg: any[]) => void;
+	OnWebTwainNotFoundOnMacCallback?: (...arg: any[]) => void;
+	OnWebTwainNotFoundOnAndroidCallback?: (...arg: any[]) => void;
+	OnMobileNotSupportCallback?: () => void;
+	OnHTTPCorsError?: (msg?: string) => void;
+	OnWebTwainNeedUpgradeCallback?: (...arg: any[]) => void;
+	OnLTSLicenseError?: (message?: string, code?: number) => void;
+	OnLTSConnectionWarning?: () => void;
+	OnLTSPublicLicenseWarning?: (message?: string) => void;
+	OnLicenseExpiredWarning?: (...arg: any[]) => void;
+	OnLicenseError?: (message?: string, errorCode?: number) => void;
+}
+declare const Dynamsoft: (DWTInstall & typeof DynamsoftStatic);
+//declare const Dynamsoft: (typeof DynamsoftStatic);
 export default Dynamsoft;

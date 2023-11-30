@@ -1,5 +1,6 @@
-import { DynamsoftEnums as Dynamsoft } from "./Dynamsoft.Enum";
+import { DynamsoftEnumsDWT } from "./Dynamsoft.Enum";
 import { WebTwainEdit } from "./WebTwain.Edit";
+import { WebTwain } from "./WebTwain";
 
 export interface WebTwainAcquire extends WebTwainEdit {
     /**
@@ -65,6 +66,9 @@ export interface WebTwainAcquire extends WebTwainEdit {
      * Load a data source to get it ready to acquire images.
      */
     OpenSourceAsync(): Promise<boolean>;
+	/*
+	* @deprecated since version 10.1. This function will be removed in future versions. Use `GetSourceNamesAsync` instead.
+	*/
     GetSourceNames(bIncludeDetails?: boolean): string[] | SourceDetails[];
     /**
      * Return all available data sources (scanners, etc.) and optionally all detailed information about them.
@@ -81,18 +85,13 @@ export interface WebTwainAcquire extends WebTwainEdit {
     SelectSource(
         successCallBack?: () => void,
         failureCallBack?: (errorCode: number, errorString: string) => void
-    ): boolean | void;
+    ): boolean | string;
     /**
      * Bring up the Source Selection User Interface (UI) for the user to choose a data source.
-     * @param successCallback A callback function that is executed if the request succeeds.
-     * @param failureCallback A callback function that is executed if the request fails.
-     * @argument errorCode The error code.
-     * @argument errorString The error string.
+     * @param deviceType The device type. Added the parameter deviceType in Dynamic Web TWAIN 18
      */
-    SelectSourceAsync(
-        successCallBack?: () => void,
-        failureCallBack?: (errorCode: number, errorString: string) => void
-    ): Promise<boolean>;
+    SelectSourceAsync(deviceType?: DynamsoftEnumsDWT.EnumDWT_DeviceType | number
+    ): Promise<number>;
     /**
      * Select a data source by its index.
      * @param index The index of the data source.
@@ -103,6 +102,22 @@ export interface WebTwainAcquire extends WebTwainEdit {
      * @param index The index of the data source.
      */
     SelectSourceByIndexAsync(index: number): Promise<boolean>;
+    /**
+     * Return all available devices (scanners, eSCL scanners, etc.) for the device type (if specified)
+     * @param deviceType The device type
+     * @param refresh Default value: false
+     */
+	GetDevicesAsync(deviceType?: DynamsoftEnumsDWT.EnumDWT_DeviceType | number, refresh?: boolean): Promise<Device[]>;
+    /**
+     * Select the device to use for scanning
+     * @param device the device 
+     */
+	SelectDeviceAsync(device: Device): Promise< boolean>;
+    /**
+     * Scan documents into another DWObject control. eSCL is not supported.
+     * @param deviceConfiguration The device configuration
+     */
+	AcquireImageAsync(deviceConfiguration?: DeviceConfiguration): Promise< boolean>;
     /**
      * Sets a timer which stops the data source opening process once it expires.
      * @param duration Define the duration of the timer (in milliseconds).
@@ -143,6 +158,7 @@ export interface WebTwainAcquire extends WebTwainEdit {
      */
     GetCustomDSDataEx(): string;
     /**
+	 * @deprecated since version 18.0. This function will be removed in future versions. 
      * Inspect the current data source and return whether it is a scanner, a webcam, etc.
      */
     GetDeviceType(): number;
@@ -184,7 +200,7 @@ export interface WebTwainAcquire extends WebTwainEdit {
      */
     SetFileXferInfo(
         fileName: string,
-        fileFormat: Dynamsoft.DWT.EnumDWT_FileFormat | number
+        fileFormat: DynamsoftEnumsDWT.EnumDWT_FileFormat | number
     ): boolean;
     /**
      * Set the left, top, right, and bottom sides of the image layout
@@ -228,15 +244,15 @@ export interface WebTwainAcquire extends WebTwainEdit {
     /**
      * Return or set whether to use TWAIN or ICA protocol on macOS.
      */
-    ImageCaptureDriverType: Dynamsoft.DWT.EnumDWT_Driver | number;
+    ImageCaptureDriverType: DynamsoftEnumsDWT.EnumDWT_Driver | number;
     /**
      * Return or set the page size the data source uses to acquire images.
      */
-    PageSize: Dynamsoft.DWT.EnumDWT_CapSupportedSizes | number;
+    PageSize: DynamsoftEnumsDWT.EnumDWT_CapSupportedSizes | number;
     /**
      * Return or set the pixel type used when acquiring images.
      */
-    PixelType: Dynamsoft.DWT.EnumDWT_PixelType | number;
+    PixelType: DynamsoftEnumsDWT.EnumDWT_PixelType | number;
     /**
      * Return or set the resolution used when acquiring images.
      */
@@ -268,7 +284,7 @@ export interface WebTwainAcquire extends WebTwainEdit {
     /**
      * Return whether the source supports duplex. If yes, it further returns the level of duplex the data source supports.
      */
-    readonly Duplex: Dynamsoft.DWT.EnumDWT_DUPLEX | number;
+    readonly Duplex: DynamsoftEnumsDWT.EnumDWT_DUPLEX | number;
     /**
      * Return or set whether to enable the data source's auto-brightness feature.
      */
@@ -338,26 +354,31 @@ export interface WebTwainAcquire extends WebTwainEdit {
      */
     readonly ImageLayoutPageNumber: number;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions. Use `RegisterEvent("OnPostTransferAsync", function (outputInfo: OutputInfo) {})` and get `outputInfo` instead.
      * Return the bit depth of the current image.
      */
     readonly ImageBitsPerPixel: number;
     /**
      * Return the pixel type of the current image.
      */
-    readonly ImagePixelType: Dynamsoft.DWT.EnumDWT_PixelType | number;
+    readonly ImagePixelType: DynamsoftEnumsDWT.EnumDWT_PixelType | number;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions. Use `RegisterEvent("OnPostTransferAsync", function (outputInfo: OutputInfo) {})` and get `outputInfo` instead.
      * Return the length of the current image.
      */
     readonly ImageLength: number;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions. Use `RegisterEvent("OnPostTransferAsync", function (outputInfo: OutputInfo) {})` and get `outputInfo` instead.
      * Return the width of the current image.
      */
     readonly ImageWidth: number;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions. Use `RegisterEvent("OnPostTransferAsync", function (outputInfo: OutputInfo) {})` and get `outputInfo` instead.
      * Return the horizontal resolution of the current image.
      */
     readonly ImageXResolution: number;
     /**
+	 * @deprecated since version 10.1. This property will be removed in future versions. Use `RegisterEvent("OnPostTransferAsync", function (outputInfo: OutputInfo) {})` and get `outputInfo` instead.
      * Return the vertical resolution of the current image.
      */
     readonly ImageYResolution: number;
@@ -368,7 +389,7 @@ export interface WebTwainAcquire extends WebTwainEdit {
     /**
      * Return the type of the magnetic data if the data source supports magnetic data recognition.
      */
-    readonly MagType: Dynamsoft.DWT.EnumDWT_MagType | number;
+    readonly MagType: DynamsoftEnumsDWT.EnumDWT_MagType | number;
     /**
      * Return the number of transfers the data source is ready to supply upon demand.
      */
@@ -380,11 +401,11 @@ export interface WebTwainAcquire extends WebTwainEdit {
     /**
      * Return or set the data source's transfer mode.
      */
-    TransferMode: Dynamsoft.DWT.EnumDWT_TransferMode | number;
+    TransferMode: DynamsoftEnumsDWT.EnumDWT_TransferMode | number;
     /**
      * Return or set the unit of measure for all quantities.
      */
-    Unit: Dynamsoft.DWT.EnumDWT_UnitType | number;
+    Unit: DynamsoftEnumsDWT.EnumDWT_UnitType | number;
     /**
      * Return and set the number of images your application is willing to accept for each scan job.
      */
@@ -417,169 +438,170 @@ export interface WebTwainAcquire extends WebTwainEdit {
         failureCallback: (capabilities: Capabilities) => void
     ): void;
     /**
-     * [Deprecation] Specifies the capabiltiy to be negotiated. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Specifies the capabiltiy to be negotiated. This is a runtime property.
      */
-    Capability: Dynamsoft.DWT.EnumDWT_Cap;
+    Capability: DynamsoftEnumsDWT.EnumDWT_Cap;
     /**
-     * [Deprecation] Return or set the index (0-based) of
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the index (0-based) of
      * a list to indicate the Current Value when the value of
      * the CapType property is TWON_ENUMERATION. If the data type
      * of the capability is String, the list is in CapItemsString property.
      * For other data types, the list is in CapItems property. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapCurrentIndex: number;
     /**
-     * [Deprecation] Return or set the current value in a range when the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the current value in a range when the
      * value of the CapType property is TWON_RANGE. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapCurrentValue: number;
     /**
-     * [Deprecation] Return the index (0-based) of a list to indicate the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return the index (0-based) of a list to indicate the
      * Default Value when the value of the CapType property is TWON_ENUMERATION.
      * If the data type of the capability is String, the list is in CapItemsString property.
      *  For other data types, the list is in CapItems property. This is a runtime, read-only property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     readonly CapDefaultIndex: number;
     /**
-     * [Deprecation] Return the default value in a range when the value of the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return the default value in a range when the value of the
      * CapType property is TWON_RANGE. This is a runtime, read-only property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapDefaultValue: number;
     /**
-     * [Deprecation] Retruns the description for a capability
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Retruns the description for a capability
      */
     CapDescription: string;
     /**
-     * [Deprecation] Return or set the maximum value in a range when the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the maximum value in a range when the
      * value of the CapType property is TWON_RANGE. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapMaxValue: number;
     /**
-     * [Deprecation] Return or set the minimum value in a range when the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the minimum value in a range when the
      * value of the CapType property is TWON_RANGE. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapMinValue: number;
     /**
-     * [Deprecation] Return or set how many items are in the list when the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set how many items are in the list when the
      *  value of the CapType property is TWON_ARRAY or TWON_ENUMERATION.
      * For String data type, the list is in CapItemsString property.
      * For other data types, the list is in CapItems property.
      * This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapNumItems: number;
     /**
-     * [Deprecation] Return or set the step size in a range when the value
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the step size in a range when the value
      * of the CapType property is TWON_RANGE. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapStepSize: number;
     /**
-     * [Deprecation] Return or set the type of capability container used
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the type of capability container used
      * to exchange capability information between application and source.
      * This is a runtime property.
      */
-    CapType: Dynamsoft.DWT.EnumDWT_CapType;
+    CapType: DynamsoftEnumsDWT.EnumDWT_CapType;
     /**
-     * [Deprecation] Return or set the value of the capability specified by
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the value of the capability specified by
      *  Capability property when the value of the CapType property is TWON_ONEVALUE.
      * This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapValue: number;
     /**
-     * [Deprecation] Return or set the string value for a capability when the
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the string value for a capability when the
      * value of the CapType property is TWON_ONEVALUE. This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapValueString: string;
     /**
-     * [Deprecation] Return or set the value type for reading the value of a capability.
-     *  This is a runtime property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This property will be removed in future versions. Use function `getCapabilities` and `setCapabilities` instead.
+     * Return or set the value type for reading the value of a capability.
+     * This is a runtime property.
      */
     CapValueType: number;
     /**
-     * [Deprecation] Gets information of the capability specified by the Capability property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Gets information of the capability specified by the Capability property.
      */
     CapGet(): boolean;
     /**
-     * [Deprecation] Return the Source's current Value for the specified capability.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the Source's current Value for the specified capability.
      */
     CapGetCurrent(): boolean;
     /**
-     * [Deprecation] Return the Source's Default Value for the specified capability.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the Source's Default Value for the specified capability.
      * This is the Source's preferred default value.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapGetDefault(): boolean;
     /**
-     * [Deprecation] Return the value of the bottom-most edge of the specified frame.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the value of the bottom-most edge of the specified frame.
      * @param index specifies the value of which frame to get. The index is 0-based.
      */
     CapGetFrameBottom(index: number): number;
     /**
-     * [Deprecation] Return the value (in Unit) of the left-most edge of the specified frame.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the value (in Unit) of the left-most edge of the specified frame.
      * @param index specifies the value of which frame to get. The index is 0-based.
      */
     CapGetFrameLeft(index: number): number;
     /**
-     * [Deprecation] Return the value (in Unit) of the left-most edge of the specified frame.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the value (in Unit) of the left-most edge of the specified frame.
      * @param index specifies the value of which frame to get. The index is 0-based.
      */
     CapGetFrameRight(index: number): number;
     /**
-     * [Deprecation] Return the value (in Unit) of the top-most edge of the specified frame.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Return the value (in Unit) of the top-most edge of the specified frame.
      * @param index specifies the value of which frame to get. The index is 0-based.
      */
     CapGetFrameTop(index: number): number;
     /**
-     * [Deprecation] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
      */
     CapGetHelp(index: number): number;
     /**
-     * [Deprecation] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
      */
     CapGetLabel(index: number): number;
     /**
-     * [Deprecation] Use getCapabilities() and setCapabilities() instead.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
      */
     CapGetLabels(index: number): number;
     /**
-     * [Deprecation] Queries whether the Source supports a particular operation on the capability.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
-     * @param {Dynamsoft.DWT.EnumDWT_MessageType} messageType specifies the type of capability operation.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Queries whether the Source supports a particular operation on the capability.
+     * @param {DynamsoftEnumsDWT.EnumDWT_MessageType} messageType specifies the type of capability operation.
      */
-    CapIfSupported(messageType: Dynamsoft.DWT.EnumDWT_MessageType): boolean;
+    CapIfSupported(messageType: DynamsoftEnumsDWT.EnumDWT_MessageType): boolean;
     /**
-     * [Deprecation] Changes the Current Value of the capability specified by
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Changes the Current Value of the capability specified by
      * Capability property back to its power-on value.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapReset(): boolean;
     /**
-     * [Deprecation] Sets the current capability using the container type specified by
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Sets the current capability using the container type specified by
      * CapType property. The current capability is specified by Capability property.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      */
     CapSet(): boolean;
     /**
-     * [Deprecation] Sets the values of the specified frame.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
+     * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Sets the values of the specified frame.
      * @param index  specifies the values of which frame to set. The index is 0-based.
      * @param left the value (in Unit) of the left-most edge of the specified frame.
      * @param top the value (in Unit) of the top-most edge of the specified frame.
@@ -588,43 +610,45 @@ export interface WebTwainAcquire extends WebTwainEdit {
      */
     CapSetFrame(index: number, left: number, top: number, right: number, bottom: number): boolean;
     /**
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
      * Get the cap item value of the capability specified by Capability property,
      * when the value of the CapType property is TWON_ARRAY or TWON_ENUMERATION.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      * @param index Index is 0-based. It is the index of the cap item.
      */
     GetCapItems(index: number): number;
     /**
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
      * Returns the cap item value of the capability specified by Capability property,
      * when the value of the CapType property is TWON_ARRAY or TWON_ENUMERATION.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      * @param index Index is 0-based. It is the index of the cap item.
      */
     GetCapItemsString(index: number): string;
     /**
-     * [Deprecation] Set the value of the specified cap item.
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Set the value of the specified cap item.
      * @param index Index is 0-based. It is the index of the cap item.
      * @param newVal For string type, please use CapItemsstring property.
      */
     SetCapItems(index: number, newVal: number): void;
     /**
-     * [Deprecation] Set the cap item value of the capability specified by Capability property,
+	 * @deprecated since version 16.1.1. This function will be removed in future versions. Use `getCapabilities` and `setCapabilities` instead.
+     * Set the cap item value of the capability specified by Capability property,
      * when the value of the CapType property is TWON_ARRAY or TWON_ENUMERATION.
-     * [Alternative] Use getCapabilities() and setCapabilities() instead.
      * @param index Index is 0-based. It is the index of the cap item.
      * @param newVal The new value to be set.
      */
     SetCapItemsString(index: number, newVal: string): void;
 }
 export interface DeviceConfiguration {
-    /**
+    PageSize?: DynamsoftEnumsDWT.EnumDWT_CapSupportedSizes | number;
+	/**
      * Whether to show the built-in User Interface from the device vendor
      */
     IfShowUI?: boolean;
     /**
      * How a pixel is represented. Basically it means whether to scan in color, grey or black & white
      */
-    PixelType?: Dynamsoft.DWT.EnumDWT_PixelType | number | string;
+    PixelType?: DynamsoftEnumsDWT.EnumDWT_PixelType | number | string;
     /**
      * How detailed is the acquisition. Measured by dots per pixel (DPI)
      */
@@ -642,6 +666,10 @@ export interface DeviceConfiguration {
      */
     IfDisableSourceAfterAcquire?: boolean;
     /**
+     * Whether to close source after aquisition.
+     */
+	IfCloseSourceAfterAcquire?:boolean;
+    /**
      * Whether to retrieve information about the image after it's transferred.
      */
     IfGetImageInfo?: boolean;
@@ -652,7 +680,13 @@ export interface DeviceConfiguration {
     /**
      * How much extended information is retrieved. Only valid when {IfGetExtImageInfo} is true.
      */
-    extendedImageInfoQueryLevel?: number;
+    extendedImageInfoQueryLevel?: DynamsoftEnumsDWT.EnumDWT_ExtImageInfo | number;
+    /**
+     * Specify a source by its index.
+     * (Added in 16.2)
+     */
+    SelectSourceByIndex?: number;
+	[key:string]: any;
 }
 export interface SourceDetails {
     /**
@@ -730,7 +764,7 @@ export interface ScanSetup {
     /**
      * The TWAIN transfer mode.
      */
-    transferMode?: Dynamsoft.DWT.EnumDWT_TransferMode | number;
+    transferMode?: DynamsoftEnumsDWT.EnumDWT_TransferMode | number;
     /**
      * Set how the transfer is done.
      */
@@ -743,7 +777,7 @@ export interface ScanSetup {
         /**
          * Specify the file format.
          */
-        fileFormat?: Dynamsoft.DWT.EnumDWT_FileFormat | number,
+        fileFormat?: DynamsoftEnumsDWT.EnumDWT_FileFormat | number,
         /**
          * Specify the quality of JPEG files.
          */
@@ -751,7 +785,7 @@ export interface ScanSetup {
         /**
          * Specify the compression type of the file.
          */
-        compressionType?: Dynamsoft.DWT.EnumDWT_CompressionType | number
+        compressionType?: DynamsoftEnumsDWT.EnumDWT_CompressionType | number
     };
     /**
      * Set where the scanned images are inserted.
@@ -772,7 +806,7 @@ export interface ScanSetup {
         /**
          * Specify the pixel type.
          */
-        pixelType?: Dynamsoft.DWT.EnumDWT_PixelType | number,
+        pixelType?: DynamsoftEnumsDWT.EnumDWT_PixelType | number,
         /**
          * Specify the resolution.
          */
@@ -798,11 +832,11 @@ export interface ScanSetup {
         /**
          * Specify the page size.
          */
-        pageSize?: Dynamsoft.DWT.EnumDWT_CapSupportedSizes | number,
+        pageSize?: DynamsoftEnumsDWT.EnumDWT_CapSupportedSizes | number,
         /**
          * Specify the unit.
          */
-        unit?: Dynamsoft.DWT.EnumDWT_UnitType | number,
+        unit?: DynamsoftEnumsDWT.EnumDWT_UnitType | number,
         /**
          * Specify a layout to scan, if present, it'll override pageSize.
          */
@@ -815,7 +849,7 @@ export interface ScanSetup {
         /**
          * Specify the pixel flavor.
          */
-        pixelFlavor?: Dynamsoft.DWT.EnumDWT_CapPixelFlavor | number,
+        pixelFlavor?: DynamsoftEnumsDWT.EnumDWT_CapPixelFlavor | number,
         /**
          * Specify Brightness.
          */
@@ -860,7 +894,7 @@ export interface ScanSetup {
         /**
          * Set the output format.
          */
-        format?: Dynamsoft.DWT.EnumDWT_ImageType | number,
+        format?: DynamsoftEnumsDWT.EnumDWT_ImageType | number,
         /**
          * Specify how many times the library will try the output.
          */
@@ -891,7 +925,7 @@ export interface ScanSetup {
          */
         pdfSetup?: {
             author?: string,
-            compression?: Dynamsoft.DWT.EnumDWT_PDFCompressionType | number,
+            compression?: DynamsoftEnumsDWT.EnumDWT_PDFCompressionType | number,
             creator?: string,
             /**
              * Example: 'D:20181231'
@@ -913,7 +947,7 @@ export interface ScanSetup {
          */
         tiffSetup?: {
             quality?: number,
-            compression?: Dynamsoft.DWT.EnumDWT_TIFFCompressionType | number,
+            compression?: DynamsoftEnumsDWT.EnumDWT_TIFFCompressionType | number,
             /**
              * Specify Tiff custom tags.
              */
@@ -982,23 +1016,23 @@ export interface CapabilityDetails {
     /**
      * The container type of the Capability
      */
-    conType: ValueAndLabel;
+    conType?: ValueAndLabel;
     /**
      * The index for the current value of the Capability
      */
-    curIndex: number;
+    curIndex?: number;
     /**
      * The current value of the Capability
      */
-    curValue: ValueAndLabel;
+    curValue?: ValueAndLabel;
     /**
      * The index for the default value of the Capability
      */
-    defIndex: number;
+    defIndex?: number;
     /**
      * The operation types that are supported by the Capability. Types include {"get", "set", "reset" "getdefault", "getcurrent"}
      */
-    query: string[];
+    query?: string[];
     /**
      * The value type of the Capability. Value types include
      * TWTY_BOOL: 6
@@ -1015,21 +1049,22 @@ export interface CapabilityDetails {
      * TWTY_UINT16: 4
      * TWTY_int: 5
      */
-    valueType: ValueAndLabel;
+    valueType?: ValueAndLabel;
     /**
      * The available values of the Capability
      */
-    values: ValueAndLabel[];
+    values?: ValueAndLabel[];
 }
 export interface ValueAndLabel {
     /**
      * Numeric representation of the item
      */
-    value: Dynamsoft.DWT.EnumDWT_Cap | Dynamsoft.DWT.EnumDWT_CapType | Dynamsoft.DWT.EnumDWT_CapValueType | number;
+    value?: DynamsoftEnumsDWT.EnumDWT_Cap | DynamsoftEnumsDWT.EnumDWT_CapType | DynamsoftEnumsDWT.EnumDWT_CapValueType | number;
     /**
      * Label or name of the item
      */
-    label: string;
+    label?: string;
+	[key:string]:any;
 }
 export interface Capabilities {
     /**
@@ -1045,15 +1080,26 @@ export interface CapabilitySetup {
     /**
      * Specify a capability
      */
-    capability: Dynamsoft.DWT.EnumDWT_Cap | number;
+    capability: DynamsoftEnumsDWT.EnumDWT_Cap | number;
     /**
      * The value to set to the capability or the value of the capability after setting.
      */
-    curValue: number | string;
+    curValue: number | string | object;
     errorCode?: number;
     errorString?: string;
     /**
      * Whether to "ignore" or "fail" the request if an exception occurs when setting this specific capability.
      */
     exception?: string;
+}
+export interface ServiceInfo {
+	server: string; // same to serverUrl, user input
+	attrs?: any;
+}
+export interface Device {
+	name: string; 
+	displayName: string; 
+	deviceType: DynamsoftEnumsDWT.EnumDWT_DeviceType;
+	serviceInfo?: ServiceInfo;
+	deviceInfo?: any;
 }
